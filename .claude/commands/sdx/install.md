@@ -1,6 +1,6 @@
 ---
-description: Cargo install sdx globally
-allowed-tools: Bash(cargo install:*), Edit
+description: Build and install sdx to /usr/local/bin
+allowed-tools: Bash(cargo build:*), Bash(sudo cp:*), Bash(sudo install:*), Bash(rm:*), Bash(sdx --version), Edit
 ---
 
 First, bump the pre-release version in `Cargo.toml` before installing:
@@ -9,7 +9,10 @@ First, bump the pre-release version in `Cargo.toml` before installing:
 - If it has no pre suffix, append `-pre.1` (e.g. `0.1.0` → `0.1.0-pre.1`)
 - Use the Edit tool to update the version in `Cargo.toml`
 
-Then run `source "$HOME/.cargo/env" 2>/dev/null; cargo install --path .` from the project root to install sdx globally.
+Then build a release binary and install it:
+1. Run `cargo build --release` from the project root
+2. Run `sudo install -m 755 target/release/sdx /usr/local/bin/sdx`
+3. Remove any stale copies (e.g. `~/.cargo/bin/sdx`) if they exist
 
 If the install succeeds, verify by running `sdx --version` and show the output.
 If the install fails, show the error and suggest a fix.
