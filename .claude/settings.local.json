@@ -36,7 +36,22 @@
       "Bash(git remote get-url:*)",
       "Bash(git remote set-url:*)",
       "Bash(cargo check:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(sdx models:*)",
+      "Bash(/usr/local/bin/sd:*)",
+      "Bash(cargo install:*)",
+      "Bash(sdx generate:*)",
+      "Bash(~/.cache/sdx/sd-cli:*)",
+      "Bash(/opt/rocm/bin/rocminfo:*)",
+      "Bash(chmod:*)",
+      "Bash(/home/chi/Projects/sdx/build.sh:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:gist.github.com)",
+      "WebFetch(domain:www.ctcservers.com)",
+      "WebFetch(domain:rocm.docs.amd.com)",
+      "WebFetch(domain:major.io)",
+      "WebFetch(domain:deepwiki.com)",
+      "WebFetch(domain:aur.archlinux.org)"
     ]
   }
 }
