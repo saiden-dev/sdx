@@ -67,7 +67,8 @@
       "Bash(gh release list:*)",
       "Bash(gh release create:*)",
       "Bash(gh release view:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(gh run list:*)"
     ]
   }
 }
