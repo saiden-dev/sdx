@@ -1,6 +1,6 @@
 [package]
 name = "sdx"
-version = "0.1.0-pre.5"
+version = "0.1.0-pre.6"
 edition = "2024"
 description = "Friendly CLI/server wrapper for sd-cli (stable-diffusion.cpp)"
 license = "MIT"
@@ -17,6 +17,9 @@ tokio = { version = "1", features = ["full"] }
 toml = "0.8"
 tower-http = { version = "0.6", features = ["cors"] }
 uuid = { version = "1", features = ["v4"] }
+
+[build-dependencies]
+ureq = "3"
 
 [dev-dependencies]
 tower = { version = "0.5", features = ["util"] }

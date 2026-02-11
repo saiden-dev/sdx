@@ -76,7 +76,6 @@ mod tests {
             .modified()
             .expect("mtime");
 
-        // Brief pause so mtime would differ if rewritten
         std::thread::sleep(std::time::Duration::from_millis(50));
 
         let path2 = extract_to(&dir).expect("second extract");

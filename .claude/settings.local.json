@@ -63,7 +63,11 @@
       "Bash(git -C /home/chi/Projects/sdx commit -m \"$\\(cat <<''EOF''\nAdd justfile with install task and bump to pre.3\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(git -C /home/chi/Projects/sdx push)",
       "Bash(sudo rm:*)",
-      "Bash(echo:*)"
+      "Bash(echo:*)",
+      "Bash(gh release list:*)",
+      "Bash(gh release create:*)",
+      "Bash(gh release view:*)",
+      "Bash(ls:*)"
     ]
   }
 }
