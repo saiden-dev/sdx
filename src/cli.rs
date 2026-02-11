@@ -25,9 +25,9 @@ pub enum Commands {
 
 #[derive(Debug, Parser)]
 pub struct GenerateCmd {
-    /// Model name from config
+    /// Model name from config (uses default_model if omitted)
     #[arg(long)]
-    pub model: String,
+    pub model: Option<String>,
 
     /// Text prompt
     #[arg(short, long)]
@@ -99,9 +99,21 @@ mod tests {
         let cli = Cli::parse_from(["sdx", "generate", "--model", "sd15", "-p", "a cat"]);
         match cli.command {
             Commands::Generate(cmd) => {
-                assert_eq!(cmd.model, "sd15");
+                assert_eq!(cmd.model.as_deref(), Some("sd15"));
                 assert_eq!(cmd.prompt, "a cat");
                 assert_eq!(cmd.output, PathBuf::from("output.png"));
+            }
+            _ => panic!("expected Generate"),
+        }
+    }
+
+    #[test]
+    fn cli_parses_generate_without_model() {
+        let cli = Cli::parse_from(["sdx", "generate", "-p", "a cat"]);
+        match cli.command {
+            Commands::Generate(cmd) => {
+                assert_eq!(cmd.model, None);
+                assert_eq!(cmd.prompt, "a cat");
             }
             _ => panic!("expected Generate"),
         }

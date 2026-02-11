@@ -13,6 +13,9 @@ pub enum Error {
     #[error("model not found: {name}")]
     ModelNotFound { name: String },
 
+    #[error("no --model specified and no default_model in config")]
+    NoDefaultModel,
+
     #[error("sd-cli binary not found: {0}")]
     SdCliNotFound(PathBuf),
 

@@ -27,7 +27,8 @@ fn run(cli: Cli) -> sdx::Result<()> {
 }
 
 fn cmd_generate(sd_cli_path: &Path, config: &AppConfig, cmd: sdx::GenerateCmd) -> sdx::Result<()> {
-    let model_config = config.resolve_model(&cmd.model)?;
+    let model_name = config.resolve_model_name(cmd.model.as_deref())?;
+    let model_config = config.resolve_model(model_name)?;
     let mut args = GenerateArgs::from_model_config(sd_cli_path, model_config);
 
     args.prompt = cmd.prompt;

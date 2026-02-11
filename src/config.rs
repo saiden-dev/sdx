@@ -8,6 +8,7 @@ use crate::error::{Error, Result};
 #[derive(Debug, Deserialize, PartialEq)]
 pub struct AppConfig {
     pub sd_cli_path: Option<PathBuf>,
+    pub default_model: Option<String>,
     #[serde(default)]
     pub models: HashMap<String, ModelConfig>,
 }
@@ -76,6 +77,13 @@ impl AppConfig {
         self.models
             .get(name)
             .ok_or_else(|| Error::ModelNotFound { name: name.into() })
+    }
+
+    pub fn resolve_model_name<'a>(&'a self, name: Option<&'a str>) -> Result<&'a str> {
+        match name {
+            Some(n) => Ok(n),
+            None => self.default_model.as_deref().ok_or(Error::NoDefaultModel),
+        }
     }
 
     pub fn default_config_path() -> PathBuf {
@@ -227,6 +235,33 @@ width = 512
     fn parse_empty_models_section() {
         let config = AppConfig::parse("").expect("empty is valid");
         assert!(config.models.is_empty());
+    }
+
+    #[test]
+    fn resolve_model_name_explicit() {
+        let config = AppConfig::parse(MINIMAL_CONFIG).expect("should parse");
+        assert_eq!(config.resolve_model_name(Some("sd15")).unwrap(), "sd15");
+    }
+
+    #[test]
+    fn resolve_model_name_uses_default() {
+        let config = AppConfig::parse(
+            r#"
+default_model = "sd15"
+
+[models.sd15]
+model = "/models/sd15.safetensors"
+"#,
+        )
+        .expect("should parse");
+        assert_eq!(config.resolve_model_name(None).unwrap(), "sd15");
+    }
+
+    #[test]
+    fn resolve_model_name_no_default_returns_error() {
+        let config = AppConfig::parse(MINIMAL_CONFIG).expect("should parse");
+        let err = config.resolve_model_name(None).unwrap_err();
+        assert!(err.to_string().contains("no --model"));
     }
 
     #[test]

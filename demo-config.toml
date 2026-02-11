@@ -1,4 +1,5 @@
 sd_cli_path = "/home/chi/Projects/stable-diffusion.cpp/build/bin/sd-cli"
+default_model = "dreamshaper"
 
 [models.dreamshaper]
 model = "/models/checkpoints/dreamshaper_8.safetensors"

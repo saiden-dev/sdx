@@ -59,21 +59,18 @@ async fn generate_image(
     State(state): State<Arc<AppState>>,
     Json(req): Json<ImageGenerationRequest>,
 ) -> impl IntoResponse {
-    // Resolve model name — use first configured model as default
-    let model_name = req
-        .model
-        .as_deref()
-        .or_else(|| state.config.models.keys().next().map(String::as_str));
-    let Some(model_name) = model_name else {
-        return (
-            StatusCode::BAD_REQUEST,
-            Json(
-                serde_json::to_value(ErrorResponse::new(
-                    "no model specified and no models configured",
-                ))
-                .expect("error serializes"),
-            ),
-        );
+    // Resolve model name — use default_model from config if omitted
+    let model_name = match state.config.resolve_model_name(req.model.as_deref()) {
+        Ok(name) => name,
+        Err(e) => {
+            return (
+                StatusCode::BAD_REQUEST,
+                Json(
+                    serde_json::to_value(ErrorResponse::new(e.to_string()))
+                        .expect("error serializes"),
+                ),
+            );
+        }
     };
 
     let model_config = match state.config.resolve_model(model_name) {
