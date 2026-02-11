@@ -1,0 +1,11 @@
+sd_cli_path = "/home/chi/Projects/stable-diffusion.cpp/build/bin/sd-cli"
+
+[models.dreamshaper]
+model = "/models/checkpoints/dreamshaper_8.safetensors"
+width = 512
+height = 512
+steps = 20
+cfg_scale = 7.0
+sampling_method = "euler_a"
+scheduler = "discrete"
+negative_prompt = "ugly, blurry, low quality, deformed"

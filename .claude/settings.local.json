@@ -1,0 +1,42 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(/home/chi/Projects/stable-diffusion.cpp/build/bin/sd-cli:*)",
+      "Bash(/home/chi/Projects/stable-diffusion.cpp/build/bin/sd-server:*)",
+      "Bash(export PATH=\"$HOME/.cargo/bin:$PATH\")",
+      "Bash(cargo build:*)",
+      "Bash(cargo clippy:*)",
+      "Bash(cargo test:*)",
+      "Bash(cargo fmt:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(gh repo create:*)",
+      "Bash(export PATH=\"$HOME/.cargo/bin:/usr/bin:$PATH\")",
+      "Bash(SD=\"./target/release/simple-diffusion\")",
+      "Bash($SD --help)",
+      "Bash($SD --version)",
+      "Bash($SD generate --help)",
+      "Bash($SD serve --help)",
+      "Bash(./target/release/simple-diffusion:*)",
+      "Bash(HSA_OVERRIDE_GFX_VERSION=10.3.0 /home/chi/Projects/stable-diffusion.cpp/build/bin/sd-cli:*)",
+      "Bash(cmake:*)",
+      "Bash(export HSA_OVERRIDE_GFX_VERSION=10.3.0)",
+      "Bash(/home/chi/Projects/simple-diffusion/target/release/simple-diffusion:*)",
+      "Bash(sudo tee:*)",
+      "Bash(sudo mkdir:*)",
+      "Bash(source:*)",
+      "Bash(simple-diffusion:*)",
+      "Bash(cargo run:*)",
+      "WebSearch",
+      "WebFetch(domain:crates.io)",
+      "Bash(cargo search:*)",
+      "Bash(. \"$HOME/.cargo/env\")",
+      "Bash(export PATH=\"$HOME/.cargo/bin:/usr/bin:/bin:$PATH\")",
+      "Bash(cargo publish:*)",
+      "Bash(git remote get-url:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(cargo check:*)",
+      "Bash(git push:*)"
+    ]
+  }
+}
