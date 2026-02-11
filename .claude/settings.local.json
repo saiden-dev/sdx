@@ -51,7 +51,16 @@
       "WebFetch(domain:rocm.docs.amd.com)",
       "WebFetch(domain:major.io)",
       "WebFetch(domain:deepwiki.com)",
-      "WebFetch(domain:aur.archlinux.org)"
+      "WebFetch(domain:aur.archlinux.org)",
+      "Bash(sudo env PATH=\"$HOME/.cargo/bin:$PATH\" cargo install:*)",
+      "Bash(sudo cp:*)",
+      "Bash(just install:*)",
+      "Bash(sdx:*)",
+      "Bash(git -C /home/chi/Projects/sdx status)",
+      "Bash(git -C /home/chi/Projects/sdx diff)",
+      "Bash(git -C /home/chi/Projects/sdx log --oneline -5)",
+      "Bash(git -C /home/chi/Projects/sdx add:*)",
+      "Bash(git -C /home/chi/Projects/sdx commit -m \"$\\(cat <<''EOF''\nAdd justfile with install task and bump to pre.3\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   }
 }
