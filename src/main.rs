@@ -1,7 +1,7 @@
 use std::path::Path;
 use std::process;
 
-use clap::Parser;
+use clap::{CommandFactory, Parser};
 
 use sdx::{AppConfig, Cli, Commands, GenerateArgs, build_router};
 
@@ -15,11 +15,17 @@ fn main() {
 }
 
 fn run(cli: Cli) -> sdx::Result<()> {
+    let Some(command) = cli.command else {
+        Cli::command().print_help().expect("can write to stdout");
+        println!();
+        return Ok(());
+    };
+
     let config_path = cli.config.unwrap_or_else(AppConfig::default_config_path);
     let config = AppConfig::load(&config_path)?;
     let sd_cli_path = config.resolve_sd_cli_path()?;
 
-    match cli.command {
+    match command {
         Commands::Generate(cmd) => cmd_generate(&sd_cli_path, &config, cmd),
         Commands::Serve(cmd) => cmd_serve(config, sd_cli_path, cmd),
         Commands::Models => cmd_models(&config),

@@ -10,7 +10,7 @@ pub struct Cli {
     pub config: Option<PathBuf>,
 
     #[command(subcommand)]
-    pub command: Commands,
+    pub command: Option<Commands>,
 }
 
 #[derive(Debug, Subcommand)]
@@ -97,7 +97,7 @@ mod tests {
     #[test]
     fn cli_parses_generate() {
         let cli = Cli::parse_from(["sdx", "generate", "--model", "sd15", "-p", "a cat"]);
-        match cli.command {
+        match cli.command.unwrap() {
             Commands::Generate(cmd) => {
                 assert_eq!(cmd.model.as_deref(), Some("sd15"));
                 assert_eq!(cmd.prompt, "a cat");
@@ -110,7 +110,7 @@ mod tests {
     #[test]
     fn cli_parses_generate_without_model() {
         let cli = Cli::parse_from(["sdx", "generate", "-p", "a cat"]);
-        match cli.command {
+        match cli.command.unwrap() {
             Commands::Generate(cmd) => {
                 assert_eq!(cmd.model, None);
                 assert_eq!(cmd.prompt, "a cat");
@@ -151,7 +151,7 @@ mod tests {
             "-b",
             "2",
         ]);
-        match cli.command {
+        match cli.command.unwrap() {
             Commands::Generate(cmd) => {
                 assert_eq!(cmd.width, Some(1024));
                 assert_eq!(cmd.height, Some(1024));
@@ -168,7 +168,7 @@ mod tests {
     #[test]
     fn cli_parses_serve() {
         let cli = Cli::parse_from(["sdx", "serve", "--host", "0.0.0.0", "--port", "9090"]);
-        match cli.command {
+        match cli.command.unwrap() {
             Commands::Serve(cmd) => {
                 assert_eq!(cmd.host, "0.0.0.0");
                 assert_eq!(cmd.port, 9090);
@@ -180,7 +180,7 @@ mod tests {
     #[test]
     fn cli_parses_serve_defaults() {
         let cli = Cli::parse_from(["sdx", "serve"]);
-        match cli.command {
+        match cli.command.unwrap() {
             Commands::Serve(cmd) => {
                 assert_eq!(cmd.host, "127.0.0.1");
                 assert_eq!(cmd.port, 8080);
@@ -192,13 +192,19 @@ mod tests {
     #[test]
     fn cli_parses_models() {
         let cli = Cli::parse_from(["sdx", "models"]);
-        assert!(matches!(cli.command, Commands::Models));
+        assert!(matches!(cli.command, Some(Commands::Models)));
     }
 
     #[test]
     fn cli_parses_global_config() {
         let cli = Cli::parse_from(["sdx", "--config", "/custom/config.toml", "models"]);
         assert_eq!(cli.config, Some(PathBuf::from("/custom/config.toml")));
+    }
+
+    #[test]
+    fn cli_parses_no_subcommand() {
+        let cli = Cli::parse_from(["sdx"]);
+        assert!(cli.command.is_none());
     }
 
     #[test]

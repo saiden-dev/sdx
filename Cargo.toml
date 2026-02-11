@@ -1,6 +1,6 @@
 [package]
 name = "sdx"
-version = "0.1.0-pre.4"
+version = "0.1.0-pre.5"
 edition = "2024"
 description = "Friendly CLI/server wrapper for sd-cli (stable-diffusion.cpp)"
 license = "MIT"
