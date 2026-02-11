@@ -62,7 +62,7 @@ pub struct GenerateCmd {
     pub guidance: Option<f32>,
 
     /// RNG seed (negative for random)
-    #[arg(short, long)]
+    #[arg(short, long, allow_negative_numbers = true)]
     pub seed: Option<i64>,
 
     /// Sampling method
