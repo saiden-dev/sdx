@@ -38,7 +38,7 @@ fn cache_dir() -> PathBuf {
                 .map(|h| PathBuf::from(h).join(".cache"))
                 .unwrap_or_else(|_| PathBuf::from(".cache"))
         })
-        .join("simple-diffusion")
+        .join("sdx")
 }
 
 #[cfg(test)]

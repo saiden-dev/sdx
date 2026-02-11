@@ -4,13 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Simple Diffusion — a Rust CLI/server wrapping `sd-cli` from stable-diffusion.cpp (edition 2024).
+sdx — a Rust CLI/server wrapping `sd-cli` from stable-diffusion.cpp (edition 2024).
 
 Two modes:
-- `simple-diffusion generate` — CLI txt2img calling sd-cli as subprocess
-- `simple-diffusion serve` — OpenAI-compatible HTTP API that calls sd-cli per request
+- `sdx generate` — CLI txt2img calling sd-cli as subprocess
+- `sdx serve` — OpenAI-compatible HTTP API that calls sd-cli per request
 
-Model selection via TOML config at `~/.config/simple-diffusion/config.toml`.
+Model selection via TOML config at `~/.config/sdx/config.toml`.
 
 ## Build Commands
 

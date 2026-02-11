@@ -3,7 +3,7 @@ use std::process;
 
 use clap::Parser;
 
-use simple_diffusion::{AppConfig, Cli, Commands, GenerateArgs, build_router};
+use sdx::{AppConfig, Cli, Commands, GenerateArgs, build_router};
 
 fn main() {
     let cli = Cli::parse();
@@ -14,7 +14,7 @@ fn main() {
     }
 }
 
-fn run(cli: Cli) -> simple_diffusion::Result<()> {
+fn run(cli: Cli) -> sdx::Result<()> {
     let config_path = cli.config.unwrap_or_else(AppConfig::default_config_path);
     let config = AppConfig::load(&config_path)?;
     let sd_cli_path = config.resolve_sd_cli_path()?;
@@ -26,11 +26,7 @@ fn run(cli: Cli) -> simple_diffusion::Result<()> {
     }
 }
 
-fn cmd_generate(
-    sd_cli_path: &Path,
-    config: &AppConfig,
-    cmd: simple_diffusion::GenerateCmd,
-) -> simple_diffusion::Result<()> {
+fn cmd_generate(sd_cli_path: &Path, config: &AppConfig, cmd: sdx::GenerateCmd) -> sdx::Result<()> {
     let model_config = config.resolve_model(&cmd.model)?;
     let mut args = GenerateArgs::from_model_config(sd_cli_path, model_config);
 
@@ -76,8 +72,8 @@ fn cmd_generate(
 fn cmd_serve(
     config: AppConfig,
     sd_cli_path: std::path::PathBuf,
-    cmd: simple_diffusion::ServeCmd,
-) -> simple_diffusion::Result<()> {
+    cmd: sdx::ServeCmd,
+) -> sdx::Result<()> {
     let addr = format!("{}:{}", cmd.host, cmd.port);
     eprintln!("listening on http://{addr}");
 
@@ -90,7 +86,7 @@ fn cmd_serve(
     })
 }
 
-fn cmd_models(config: &AppConfig) -> simple_diffusion::Result<()> {
+fn cmd_models(config: &AppConfig) -> sdx::Result<()> {
     if config.models.is_empty() {
         println!("no models configured");
         return Ok(());

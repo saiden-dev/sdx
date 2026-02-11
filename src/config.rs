@@ -79,7 +79,7 @@ impl AppConfig {
     }
 
     pub fn default_config_path() -> PathBuf {
-        dirs_or_home().join("simple-diffusion").join("config.toml")
+        dirs_or_home().join("sdx").join("config.toml")
     }
 }
 
@@ -219,7 +219,7 @@ width = 512
     #[test]
     fn default_config_path_is_under_config_dir() {
         let path = AppConfig::default_config_path();
-        assert!(path.to_string_lossy().contains("simple-diffusion"));
+        assert!(path.to_string_lossy().contains("sdx"));
         assert!(path.to_string_lossy().ends_with("config.toml"));
     }
 

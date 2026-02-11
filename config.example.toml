@@ -1,5 +1,5 @@
-# simple-diffusion configuration
-# Copy to ~/.config/simple-diffusion/config.toml
+# sdx configuration
+# Copy to ~/.config/sdx/config.toml
 
 # Path to the sd-cli binary from stable-diffusion.cpp
 # Optional — if omitted, the embedded sd-cli binary is used.

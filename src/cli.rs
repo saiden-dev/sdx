@@ -3,11 +3,7 @@ use std::path::PathBuf;
 use clap::{Parser, Subcommand};
 
 #[derive(Debug, Parser)]
-#[command(
-    name = "simple-diffusion",
-    version,
-    about = "Friendly wrapper for sd-cli"
-)]
+#[command(name = "sdx", version, about = "Friendly wrapper for sd-cli")]
 pub struct Cli {
     /// Path to config file
     #[arg(long, global = true)]
@@ -100,14 +96,7 @@ mod tests {
 
     #[test]
     fn cli_parses_generate() {
-        let cli = Cli::parse_from([
-            "simple-diffusion",
-            "generate",
-            "--model",
-            "sd15",
-            "-p",
-            "a cat",
-        ]);
+        let cli = Cli::parse_from(["sdx", "generate", "--model", "sd15", "-p", "a cat"]);
         match cli.command {
             Commands::Generate(cmd) => {
                 assert_eq!(cmd.model, "sd15");
@@ -121,7 +110,7 @@ mod tests {
     #[test]
     fn cli_parses_generate_all_options() {
         let cli = Cli::parse_from([
-            "simple-diffusion",
+            "sdx",
             "generate",
             "--model",
             "flux",
@@ -166,14 +155,7 @@ mod tests {
 
     #[test]
     fn cli_parses_serve() {
-        let cli = Cli::parse_from([
-            "simple-diffusion",
-            "serve",
-            "--host",
-            "0.0.0.0",
-            "--port",
-            "9090",
-        ]);
+        let cli = Cli::parse_from(["sdx", "serve", "--host", "0.0.0.0", "--port", "9090"]);
         match cli.command {
             Commands::Serve(cmd) => {
                 assert_eq!(cmd.host, "0.0.0.0");
@@ -185,7 +167,7 @@ mod tests {
 
     #[test]
     fn cli_parses_serve_defaults() {
-        let cli = Cli::parse_from(["simple-diffusion", "serve"]);
+        let cli = Cli::parse_from(["sdx", "serve"]);
         match cli.command {
             Commands::Serve(cmd) => {
                 assert_eq!(cmd.host, "127.0.0.1");
@@ -197,18 +179,13 @@ mod tests {
 
     #[test]
     fn cli_parses_models() {
-        let cli = Cli::parse_from(["simple-diffusion", "models"]);
+        let cli = Cli::parse_from(["sdx", "models"]);
         assert!(matches!(cli.command, Commands::Models));
     }
 
     #[test]
     fn cli_parses_global_config() {
-        let cli = Cli::parse_from([
-            "simple-diffusion",
-            "--config",
-            "/custom/config.toml",
-            "models",
-        ]);
+        let cli = Cli::parse_from(["sdx", "--config", "/custom/config.toml", "models"]);
         assert_eq!(cli.config, Some(PathBuf::from("/custom/config.toml")));
     }
 
