@@ -1,3 +1,4 @@
+use std::path::PathBuf;
 use std::sync::Arc;
 use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -18,12 +19,14 @@ use crate::sd_cli::GenerateArgs;
 
 pub struct AppState {
     pub config: AppConfig,
+    pub sd_cli_path: PathBuf,
     pub gpu_lock: Mutex<()>,
 }
 
-pub fn build_router(config: AppConfig) -> Router {
+pub fn build_router(config: AppConfig, sd_cli_path: PathBuf) -> Router {
     let state = Arc::new(AppState {
         config,
+        sd_cli_path,
         gpu_lock: Mutex::new(()),
     });
 
@@ -89,7 +92,7 @@ async fn generate_image(
     };
 
     // Build generation args from model defaults + request overrides
-    let mut args = GenerateArgs::from_model_config(&state.config.sd_cli_path, model_config);
+    let mut args = GenerateArgs::from_model_config(&state.sd_cli_path, model_config);
     args.prompt = req.prompt.clone();
 
     if let Some(neg) = &req.negative_prompt {
@@ -198,8 +201,6 @@ mod tests {
     fn test_config() -> AppConfig {
         AppConfig::parse(
             r#"
-sd_cli_path = "/usr/bin/true"
-
 [models.sd15]
 model = "/models/sd15.safetensors"
 width = 512
@@ -208,6 +209,10 @@ steps = 20
 "#,
         )
         .expect("test config")
+    }
+
+    fn test_router() -> Router {
+        build_router(test_config(), PathBuf::from("/usr/bin/true"))
     }
 
     fn get_request(uri: &str) -> Request<Body> {
@@ -235,7 +240,7 @@ steps = 20
 
     #[tokio::test]
     async fn list_models_returns_configured() {
-        let app = build_router(test_config());
+        let app = test_router();
         let resp = app
             .oneshot(get_request("/v1/models"))
             .await
@@ -250,7 +255,7 @@ steps = 20
 
     #[tokio::test]
     async fn generate_unknown_model_returns_404() {
-        let app = build_router(test_config());
+        let app = test_router();
         let resp = app
             .oneshot(post_json(
                 "/v1/images/generations",
@@ -271,7 +276,7 @@ steps = 20
 
     #[tokio::test]
     async fn generate_missing_prompt_returns_422() {
-        let app = build_router(test_config());
+        let app = test_router();
         let resp = app
             .oneshot(post_json("/v1/images/generations", r#"{"model":"sd15"}"#))
             .await

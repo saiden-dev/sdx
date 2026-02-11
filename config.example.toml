@@ -2,7 +2,8 @@
 # Copy to ~/.config/simple-diffusion/config.toml
 
 # Path to the sd-cli binary from stable-diffusion.cpp
-sd_cli_path = "/home/chi/Projects/stable-diffusion.cpp/build/bin/sd-cli"
+# Optional — if omitted, the embedded sd-cli binary is used.
+# sd_cli_path = "/usr/local/bin/sd-cli"
 
 # --- Model profiles ---
 # Each [models.<name>] section defines a named model profile.

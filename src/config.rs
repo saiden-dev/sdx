@@ -5,18 +5,11 @@ use serde::Deserialize;
 
 use crate::error::{Error, Result};
 
-const DEFAULT_SD_CLI_PATH: &str = "/home/chi/Projects/stable-diffusion.cpp/build/bin/sd-cli";
-
 #[derive(Debug, Deserialize, PartialEq)]
 pub struct AppConfig {
-    #[serde(default = "default_sd_cli_path")]
-    pub sd_cli_path: PathBuf,
+    pub sd_cli_path: Option<PathBuf>,
     #[serde(default)]
     pub models: HashMap<String, ModelConfig>,
-}
-
-fn default_sd_cli_path() -> PathBuf {
-    PathBuf::from(DEFAULT_SD_CLI_PATH)
 }
 
 #[derive(Debug, Deserialize, PartialEq)]
@@ -69,6 +62,14 @@ impl AppConfig {
             }
         }
         Ok(())
+    }
+
+    /// Return the configured sd_cli_path, or extract the embedded binary.
+    pub fn resolve_sd_cli_path(&self) -> Result<PathBuf> {
+        match &self.sd_cli_path {
+            Some(path) => Ok(path.clone()),
+            None => crate::embedded::extract(),
+        }
     }
 
     pub fn resolve_model(&self, name: &str) -> Result<&ModelConfig> {
@@ -158,14 +159,17 @@ scheduler = "simple"
     #[test]
     fn parse_minimal_config() {
         let config = AppConfig::parse(MINIMAL_CONFIG).expect("should parse");
-        assert_eq!(config.sd_cli_path, PathBuf::from(DEFAULT_SD_CLI_PATH));
+        assert!(config.sd_cli_path.is_none());
         assert!(config.models.contains_key("sd15"));
     }
 
     #[test]
     fn parse_full_config() {
         let config = AppConfig::parse(FULL_CONFIG).expect("should parse");
-        assert_eq!(config.sd_cli_path, PathBuf::from("/usr/local/bin/sd-cli"));
+        assert_eq!(
+            config.sd_cli_path,
+            Some(PathBuf::from("/usr/local/bin/sd-cli"))
+        );
         assert_eq!(config.models.len(), 2);
 
         let sd15 = config.resolve_model("sd15").expect("sd15 exists");

@@ -1,6 +1,7 @@
 mod api;
 mod cli;
 mod config;
+mod embedded;
 mod error;
 mod sd_cli;
 mod server;

@@ -1,3 +1,4 @@
+use std::path::Path;
 use std::process;
 
 use clap::Parser;
@@ -16,20 +17,22 @@ fn main() {
 fn run(cli: Cli) -> simple_diffusion::Result<()> {
     let config_path = cli.config.unwrap_or_else(AppConfig::default_config_path);
     let config = AppConfig::load(&config_path)?;
+    let sd_cli_path = config.resolve_sd_cli_path()?;
 
     match cli.command {
-        Commands::Generate(cmd) => cmd_generate(&config, cmd),
-        Commands::Serve(cmd) => cmd_serve(config, cmd),
+        Commands::Generate(cmd) => cmd_generate(&sd_cli_path, &config, cmd),
+        Commands::Serve(cmd) => cmd_serve(config, sd_cli_path, cmd),
         Commands::Models => cmd_models(&config),
     }
 }
 
 fn cmd_generate(
+    sd_cli_path: &Path,
     config: &AppConfig,
     cmd: simple_diffusion::GenerateCmd,
 ) -> simple_diffusion::Result<()> {
     let model_config = config.resolve_model(&cmd.model)?;
-    let mut args = GenerateArgs::from_model_config(&config.sd_cli_path, model_config);
+    let mut args = GenerateArgs::from_model_config(sd_cli_path, model_config);
 
     args.prompt = cmd.prompt;
     args.output = cmd.output;
@@ -70,13 +73,17 @@ fn cmd_generate(
     Ok(())
 }
 
-fn cmd_serve(config: AppConfig, cmd: simple_diffusion::ServeCmd) -> simple_diffusion::Result<()> {
+fn cmd_serve(
+    config: AppConfig,
+    sd_cli_path: std::path::PathBuf,
+    cmd: simple_diffusion::ServeCmd,
+) -> simple_diffusion::Result<()> {
     let addr = format!("{}:{}", cmd.host, cmd.port);
     eprintln!("listening on http://{addr}");
 
     let rt = tokio::runtime::Runtime::new()?;
     rt.block_on(async {
-        let app = build_router(config);
+        let app = build_router(config, sd_cli_path);
         let listener = tokio::net::TcpListener::bind(&addr).await?;
         axum::serve(listener, app).await?;
         Ok(())

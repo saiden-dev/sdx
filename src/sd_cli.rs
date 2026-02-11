@@ -193,7 +193,10 @@ scheduler = "simple"
     fn from_model_config_single_file() {
         let config = sample_config();
         let model = config.resolve_model("sd15").expect("sd15 exists");
-        let args = GenerateArgs::from_model_config(&config.sd_cli_path, model);
+        let args = GenerateArgs::from_model_config(
+            config.sd_cli_path.as_deref().expect("set in test config"),
+            model,
+        );
 
         assert_eq!(args.width, 512);
         assert_eq!(args.height, 512);
@@ -208,7 +211,10 @@ scheduler = "simple"
     fn from_model_config_component_paths() {
         let config = sample_config();
         let model = config.resolve_model("flux").expect("flux exists");
-        let args = GenerateArgs::from_model_config(&config.sd_cli_path, model);
+        let args = GenerateArgs::from_model_config(
+            config.sd_cli_path.as_deref().expect("set in test config"),
+            model,
+        );
 
         assert_eq!(args.width, 1024);
         assert_eq!(args.guidance, Some(3.5));
@@ -223,7 +229,10 @@ scheduler = "simple"
     fn to_args_single_file_model() {
         let config = sample_config();
         let model = config.resolve_model("sd15").expect("sd15 exists");
-        let mut ga = GenerateArgs::from_model_config(&config.sd_cli_path, model);
+        let mut ga = GenerateArgs::from_model_config(
+            config.sd_cli_path.as_deref().expect("set in test config"),
+            model,
+        );
         ga.prompt = "a cat".into();
         ga.output = PathBuf::from("out.png");
 
@@ -242,7 +251,10 @@ scheduler = "simple"
     fn to_args_component_model() {
         let config = sample_config();
         let model = config.resolve_model("flux").expect("flux exists");
-        let mut ga = GenerateArgs::from_model_config(&config.sd_cli_path, model);
+        let mut ga = GenerateArgs::from_model_config(
+            config.sd_cli_path.as_deref().expect("set in test config"),
+            model,
+        );
         ga.prompt = "a dog".into();
 
         let args = ga.to_args();
@@ -260,7 +272,10 @@ scheduler = "simple"
     fn to_args_negative_prompt() {
         let config = sample_config();
         let model = config.resolve_model("sd15").expect("sd15 exists");
-        let mut ga = GenerateArgs::from_model_config(&config.sd_cli_path, model);
+        let mut ga = GenerateArgs::from_model_config(
+            config.sd_cli_path.as_deref().expect("set in test config"),
+            model,
+        );
         ga.prompt = "a cat".into();
         ga.negative_prompt = Some("ugly, blurry".into());
 
@@ -273,7 +288,10 @@ scheduler = "simple"
     fn to_args_batch_count_omitted_when_one() {
         let config = sample_config();
         let model = config.resolve_model("sd15").expect("sd15 exists");
-        let mut ga = GenerateArgs::from_model_config(&config.sd_cli_path, model);
+        let mut ga = GenerateArgs::from_model_config(
+            config.sd_cli_path.as_deref().expect("set in test config"),
+            model,
+        );
         ga.prompt = "test".into();
         ga.batch_count = 1;
 
@@ -285,7 +303,10 @@ scheduler = "simple"
     fn to_args_batch_count_included_when_greater_than_one() {
         let config = sample_config();
         let model = config.resolve_model("sd15").expect("sd15 exists");
-        let mut ga = GenerateArgs::from_model_config(&config.sd_cli_path, model);
+        let mut ga = GenerateArgs::from_model_config(
+            config.sd_cli_path.as_deref().expect("set in test config"),
+            model,
+        );
         ga.prompt = "test".into();
         ga.batch_count = 4;
 
@@ -304,7 +325,7 @@ model = "/models/m.safetensors"
         )
         .expect("should parse");
         let model = config.resolve_model("minimal").expect("exists");
-        let args = GenerateArgs::from_model_config(&config.sd_cli_path, model);
+        let args = GenerateArgs::from_model_config(Path::new("/usr/bin/sd-cli"), model);
 
         assert_eq!(args.width, 512);
         assert_eq!(args.height, 512);
@@ -320,7 +341,10 @@ model = "/models/m.safetensors"
     fn validate_missing_sd_cli() {
         let config = sample_config();
         let model = config.resolve_model("sd15").expect("sd15 exists");
-        let mut args = GenerateArgs::from_model_config(&config.sd_cli_path, model);
+        let mut args = GenerateArgs::from_model_config(
+            config.sd_cli_path.as_deref().expect("set in test config"),
+            model,
+        );
         args.sd_cli_path = PathBuf::from("/nonexistent/sd-cli");
         args.prompt = "test".into();
 
@@ -332,7 +356,10 @@ model = "/models/m.safetensors"
     fn run_with_command_failure() {
         let config = sample_config();
         let model = config.resolve_model("sd15").expect("sd15 exists");
-        let mut args = GenerateArgs::from_model_config(&config.sd_cli_path, model);
+        let mut args = GenerateArgs::from_model_config(
+            config.sd_cli_path.as_deref().expect("set in test config"),
+            model,
+        );
         args.prompt = "test".into();
 
         // Use `false` command which always exits with code 1
@@ -345,7 +372,10 @@ model = "/models/m.safetensors"
     fn run_with_command_success() {
         let config = sample_config();
         let model = config.resolve_model("sd15").expect("sd15 exists");
-        let mut args = GenerateArgs::from_model_config(&config.sd_cli_path, model);
+        let mut args = GenerateArgs::from_model_config(
+            config.sd_cli_path.as_deref().expect("set in test config"),
+            model,
+        );
         args.prompt = "test".into();
         args.output = PathBuf::from("/tmp/test.png");
 
