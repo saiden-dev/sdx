@@ -60,7 +60,8 @@
       "Bash(git -C /home/chi/Projects/sdx diff)",
       "Bash(git -C /home/chi/Projects/sdx log --oneline -5)",
       "Bash(git -C /home/chi/Projects/sdx add:*)",
-      "Bash(git -C /home/chi/Projects/sdx commit -m \"$\\(cat <<''EOF''\nAdd justfile with install task and bump to pre.3\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")"
+      "Bash(git -C /home/chi/Projects/sdx commit -m \"$\\(cat <<''EOF''\nAdd justfile with install task and bump to pre.3\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C /home/chi/Projects/sdx push)"
     ]
   }
 }
