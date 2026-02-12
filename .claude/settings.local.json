@@ -75,5 +75,10 @@
       "WebFetch(domain:docs.rs)",
       "WebFetch(domain:rust-cli-recommendations.sunshowers.io)"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "browse",
+    "personality"
+  ],
+  "enableAllProjectMcpServers": true
 }
