@@ -3,8 +3,20 @@ use std::fs;
 use std::io::Read;
 use std::path::PathBuf;
 
-const DOWNLOAD_URL: &str =
-    "https://github.com/saiden-dev/sdx/releases/download/sd-cli-v0.1.0/sd-cli";
+const BASE_URL: &str = "https://github.com/saiden-dev/sdx/releases/download/sd-cli-v0.1.0";
+
+fn binary_name() -> String {
+    let os = env::var("CARGO_CFG_TARGET_OS").expect("CARGO_CFG_TARGET_OS not set");
+    let arch = env::var("CARGO_CFG_TARGET_ARCH").expect("CARGO_CFG_TARGET_ARCH not set");
+
+    let platform = match (os.as_str(), arch.as_str()) {
+        ("linux", "x86_64") => "linux-x86_64",
+        ("macos", "aarch64") => "macos-aarch64",
+        _ => panic!("unsupported target: {os}-{arch}"),
+    };
+
+    format!("sd-cli-{platform}")
+}
 
 fn main() {
     let out_dir = PathBuf::from(env::var("OUT_DIR").expect("OUT_DIR not set"));
@@ -16,19 +28,22 @@ fn main() {
         return;
     }
 
-    eprintln!("Downloading sd-cli from GitHub release...");
+    let name = binary_name();
+    let url = format!("{BASE_URL}/{name}");
 
-    let response = ureq::get(DOWNLOAD_URL)
+    eprintln!("Downloading {name} from GitHub release...");
+
+    let response = ureq::get(&url)
         .call()
-        .unwrap_or_else(|e| panic!("failed to download sd-cli: {e}"));
+        .unwrap_or_else(|e| panic!("failed to download {name}: {e}"));
 
     let mut body = response.into_body().into_reader();
     let mut bytes = Vec::new();
     body.read_to_end(&mut bytes)
-        .unwrap_or_else(|e| panic!("failed to read sd-cli response: {e}"));
+        .unwrap_or_else(|e| panic!("failed to read {name} response: {e}"));
 
     fs::write(&dest, &bytes)
         .unwrap_or_else(|e| panic!("failed to write sd-cli to {}: {e}", dest.display()));
 
-    eprintln!("Downloaded sd-cli ({} bytes)", bytes.len());
+    eprintln!("Downloaded {name} ({} bytes)", bytes.len());
 }

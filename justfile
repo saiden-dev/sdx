@@ -4,7 +4,8 @@ install:
     # Bump pre-release version
     current=$(grep '^version' Cargo.toml | sed 's/.*pre\.\([0-9]*\)".*/\1/')
     next=$((current + 1))
-    sed -i "s/pre\.$current/pre.$next/" Cargo.toml
+    sed -i.bak "s/pre\.$current/pre.$next/" Cargo.toml
+    rm -f Cargo.toml.bak
     echo "Bumped to pre.$next"
     # Clean old installs
     rm -f ~/.cargo/bin/sdx
